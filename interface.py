@@ -62,7 +62,13 @@ def main(game_screen, pictures):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_is_finished = True
-
+            pressed_keys = pygame.key.get_pressed()
+            if pressed_keys[pygame.K_a]:
+                game_map.sight_dir -= 1
+            if pressed_keys[pygame.K_d]:
+                game_map.sight_dir += 1
+            screen.fill((0, 0, 0))
+            pygame.display.flip()
 if __name__ == "__main__":
     pygame.init()
     game_map = game_map.GameMap()
