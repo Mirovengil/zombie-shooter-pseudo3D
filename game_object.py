@@ -22,7 +22,13 @@ class GameObject:
     sight_len : int -- радиус зрения (подробнее можно узнать в ./docs/sight.png. 
     '''
     def __init__(self, name, coords):
+        if not name in FEATURES:
+            raise ValueError('''
+            Разрывная!! Юморишь!! 
+            Создайте нормального монстра, предусмотренного игрой.
+            ''')
         self.name = name
         self.coords = coords
         self.is_visible = FEATURES[name]['is_visible']
         self.hp = FEATURES[name]['hp']
+        self.sight_len = FEATURES[name]['sight_len']
