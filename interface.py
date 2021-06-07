@@ -133,10 +133,11 @@ if __name__ == "__main__":
     pygame.init()
     game_map = game_map.GameMap()
     game_map.add_object('zombie', (0, 0), True)
-    game_map.add_object('zombie', (0, 7))
+    #game_map.add_object('zombie', (0, 7))
+    game_map.add_object('tree', (3, 5))
     screen = pygame.display.set_mode((STD_SIZE_Y, STD_SIZE_X))
     pictures = dict()
-    for pic in ['zombie', 'sight_dir']:
+    for pic in ['zombie', 'sight_dir', 'tree']:
         pictures[pic] = pygame.image.load('./images/' + pic + '.png').convert_alpha()
     pictures['info_font'] = pygame.font.SysFont('ubuntu', 14)
     pictures['info_font_color'] = (255, 255, 255)

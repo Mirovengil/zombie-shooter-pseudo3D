@@ -9,6 +9,11 @@ FEATURES = {
         'hp' : 15,
         'sight_len' : 10,
     },
+    "tree" : {
+        'is_visible' : True,
+        'hp' : 15,
+        'sight_len' : None,
+    },
 }
 
 class GameObject:

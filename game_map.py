@@ -80,7 +80,6 @@ class GameMap:
             elem['name'] = obj[1].name
             elem['dist'] = 1 - (get_dist_between_points(self.objects[self.sight].coords, obj[1].coords)\
              / self.objects[self.sight].sight_len)
-
             obj_x = obj[1].coords[0]
             obj_y = obj[1].coords[1]
             sight_x = self.objects[self.sight].coords[0]
@@ -88,11 +87,15 @@ class GameMap:
             obj_x -= sight_x
             obj_y -= sight_y
             polar_angle = math.atan2(obj_y, obj_x)
-            polar_angle = polar_angle * 180 / math.pi
-            if polar_angle < 0:
-                polar_angle = 360 + polar_angle
-            if not left_side_of_vision <= polar_angle <= right_side_of_vision or\
-            left_side_of_vision >= polar_angle >= right_side_of_vision:
+            polar_angle = degree(polar_angle * 180 / math.pi)
+            if left_side_of_vision > right_side_of_vision:
+                #Это возможно только в случае, если left_side_of_vision принадлежит
+                #четвёртой четверти, а right_side_of_vision -- первой.
+                #Чтобы это исправить, развернём все углы на 120 градусов.
+                left_side_of_vision = degree(left_side_of_vision - 120)
+                right_side_of_vision = degree(right_side_of_vision - 120)
+                polar_angle = degree(polar_angle - 120)
+            if not left_side_of_vision <= polar_angle <= right_side_of_vision:
                 continue
             elem['move'] = (polar_angle - left_side_of_vision) / (right_side_of_vision - left_side_of_vision)
 
@@ -104,7 +107,7 @@ class GameMap:
         Перемещает объект под индексом obj_index : int на расстояние way : float.
         Перемещает в том направлении, куда смотрит объект (просто шаг вперёд).
         '''
-        sight_angle = self.sight_dir * math.pi / 180
+        sight_angle = round(self.sight_dir * math.pi / 180, 5)
         if obj_index is None:
             obj_index = self.sight
         obj = self.objects[obj_index]
