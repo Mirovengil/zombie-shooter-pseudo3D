@@ -88,17 +88,13 @@ class GameMap:
             obj_y -= sight_y
             polar_angle = math.atan2(obj_y, obj_x)
             polar_angle = degree(polar_angle * 180 / math.pi)
-            if left_side_of_vision > right_side_of_vision:
-                #Это возможно только в случае, если left_side_of_vision принадлежит
-                #четвёртой четверти, а right_side_of_vision -- первой.
-                #Чтобы это исправить, развернём все углы на 120 градусов.
-                left_side_of_vision = degree(left_side_of_vision - 120)
-                right_side_of_vision = degree(right_side_of_vision - 120)
-                polar_angle = degree(polar_angle - 120)
-            if not left_side_of_vision <= polar_angle <= right_side_of_vision:
+            if not left_side_of_vision <= polar_angle <= right_side_of_vision and not\
+            degree(left_side_of_vision + 90) <= degree(polar_angle + 90) <= degree(right_side_of_vision + 90):
                 continue
-            elem['move'] = (polar_angle - left_side_of_vision) / (right_side_of_vision - left_side_of_vision)
-
+            if left_side_of_vision < right_side_of_vision:
+                elem['move'] = (polar_angle - left_side_of_vision) / (right_side_of_vision - left_side_of_vision)
+            else:
+                elem['move'] = (degree(polar_angle + 90) - degree(left_side_of_vision + 90)) / (degree(right_side_of_vision + 90) - degree(left_side_of_vision + 90))
             objects_in_sight.append(elem)
         return objects_in_sight
 
