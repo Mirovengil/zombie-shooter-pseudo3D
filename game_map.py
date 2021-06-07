@@ -25,6 +25,7 @@ def degree(value):
     if (value > 360):
         value %= 360
     return value
+
 class GameMap:
     '''
     Класс для обработки игровой карты и событий, происходящих на ней.
@@ -81,11 +82,26 @@ class GameMap:
              / self.objects[self.sight].sight_len)
             all_len_of_sight = math.pi * self.objects[self.sight].sight_len / 2
             polar_angle = (math.atan2(obj[1].coords[0], obj[1].coords[1]) + math.pi / 2) * 180 / math.pi
-            print('pa = ', polar_angle)
-            print('ls = ', left_side_of_vision)
-            print('rs = ', right_side_of_vision)
+            #print('pa = ', polar_angle)
+            #print('ls = ', left_side_of_vision)
+            #print('rs = ', right_side_of_vision)
             if  not left_side_of_vision <= polar_angle <= right_side_of_vision:
                 continue
             elem['move'] = (polar_angle  - left_side_of_vision) / (right_side_of_vision - left_side_of_vision)
             objects_in_sight.append(elem)
         return objects_in_sight
+
+    def move_obj(self, way, obj_index=None):
+        '''
+        Перемещает объект под индексом obj_index : int на расстояние way : float.
+        Перемещает в том направлении, куда смотрит объект (просто шаг вперёд).
+        '''
+        sight_angle = self.sight_dir * math.pi / 180
+        if obj_index is None:
+            obj_index = self.sight
+        obj = self.objects[obj_index]
+        x = obj.coords[0]
+        y = obj.coords[1]
+        x = x + way * math.cos(sight_angle)
+        y = x + way * math.sin(sight_angle)
+        self.objects[obj_index].coords = (x, y)

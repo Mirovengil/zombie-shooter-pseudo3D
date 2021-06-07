@@ -67,6 +67,10 @@ def main(game_screen, pictures):
                 game_map.sight_dir -= 1
             if pressed_keys[pygame.K_d]:
                 game_map.sight_dir += 1
+            if pressed_keys[pygame.K_w]:
+                game_map.move_obj(1)
+            if pressed_keys[pygame.K_s]:
+                game_map.move_obj(-1)
             screen.fill((0, 0, 0))
             pygame.display.flip()
 if __name__ == "__main__":
