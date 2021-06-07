@@ -11,6 +11,24 @@ import game_map
 STD_SIZE_Y = 640
 STD_SIZE_X = 480
 
+def draw_sight_dir(screen, degrees, pictures):
+    '''
+    Отрисовывает направление взгляда игрока в левом нижнем углу (для удобства
+    ориентации в пространстве).
+    '''
+    image = pictures['sight_dir']
+    IMG_SIZE_X = image.get_rect().width
+    IMG_SIZE_Y = image.get_rect().height
+    image = pygame.transform.rotate(image, degrees)
+    window_size_x = pygame.display.get_surface().get_width()
+    window_size_y = pygame.display.get_surface().get_height()
+    STD_SIGHT_DIR_PLACE_X = IMG_SIZE_X
+    STD_SIGHT_DIR_PLACE_Y = window_size_y - IMG_SIZE_Y
+    rect = image.get_rect()
+    rect.center = (STD_SIGHT_DIR_PLACE_X, STD_SIGHT_DIR_PLACE_Y)
+    screen.blit(image, rect)
+    
+
 def draw_object(game_screen, obj, pictures):
     '''
     Выводит на экран элемент obj:
@@ -50,6 +68,7 @@ def draw_game_map(game_screen, game_map, pictures):
     #input()
     for obj in objects:
         draw_object(game_screen, obj, pictures)
+    draw_sight_dir(game_screen, game_map.sight_dir, pictures)
 
 def main(game_screen, pictures):
     '''
@@ -80,6 +99,6 @@ if __name__ == "__main__":
     game_map.add_object('zombie', (0, 7))
     screen = pygame.display.set_mode((STD_SIZE_Y, STD_SIZE_X))
     pictures = dict()
-    for pic in ['zombie']:
+    for pic in ['zombie', 'sight_dir']:
         pictures[pic] = pygame.image.load('./images/' + pic + '.png').convert_alpha()
     main(game_map, pictures)
