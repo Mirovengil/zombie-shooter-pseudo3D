@@ -16,6 +16,15 @@ def get_dist_between_points(one_point, other_point):
     y2 = other_point[1]
     return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5 
 
+def degree(value):
+    '''
+    Приводит значение к промежутку от 0 до 360.
+    '''
+    if (value < 0):
+        value += 360
+    if (value > 360):
+        value %= 360
+    return value
 class GameMap:
     '''
     Класс для обработки игровой карты и событий, происходящих на ней.
@@ -29,7 +38,7 @@ class GameMap:
     def __init__ (self):
         self.objects = []
         self.sight = None
-        self.sight_dir = 0
+        self.sight_dir = 90
 
     def add_object(self, name, coords, sight=False):
         '''
@@ -54,8 +63,9 @@ class GameMap:
             }
         ]
         '''
-        left_side_of_vision = self.sight_dir - 45
-        right_side_of_vision = self.sight_dir + 45
+        self.sight_dir = degree(self.sight_dir)
+        left_side_of_vision = degree(self.sight_dir - 45)
+        right_side_of_vision = degree(self.sight_dir + 45)
         objects_in_sight = []
         for obj in enumerate(self.objects):
             if obj[0] == self.sight:
@@ -70,10 +80,12 @@ class GameMap:
             elem['dist'] = 1 - (get_dist_between_points(self.objects[self.sight].coords, obj[1].coords)\
              / self.objects[self.sight].sight_len)
             all_len_of_sight = math.pi * self.objects[self.sight].sight_len / 2
-            polar_angle = math.atan2(obj[1].coords[0], obj[1].coords[1])
+            polar_angle = (math.atan2(obj[1].coords[0], obj[1].coords[1]) + math.pi / 2) * 180 / math.pi
+            print('pa = ', polar_angle)
+            print('ls = ', left_side_of_vision)
+            print('rs = ', right_side_of_vision)
             if  not left_side_of_vision <= polar_angle <= right_side_of_vision:
                 continue
-            #print(polar_angle)
             elem['move'] = (polar_angle  - left_side_of_vision) / (right_side_of_vision - left_side_of_vision)
             objects_in_sight.append(elem)
         return objects_in_sight
