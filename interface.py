@@ -59,6 +59,36 @@ def draw_object(game_screen, obj, pictures):
     #print(object_size_x, object_size_y)
     #print(window_size_x, window_size_y)
 
+def draw_player_data(game_screen, data, pictures):
+    '''
+        Выводит на экран game_screen информацию data.
+        pictures['info_font'] -- шрифт для данного вывода.
+        pictures['info_font_color'] -- цвет оного шрифта.
+        Учитывается смещение из-за "компаса", который показывает
+        направление взгляда.
+        data должна иметь следующий вид:
+        {
+            'name' : str -- название объекта, за который ведётся просмотр.
+            'hp' : int -- количество единиц жизни у него.
+            coords : (float, float) -- координата, где расположен объект.
+        }
+    '''
+    text = []
+    text.append('object: ' + data['name'])
+    text.append('hp: ' + str(data['hp']))
+    text.append('angle: ' + str(data['angle']))
+    text.append('coordinates: ' + str(data['coords']))
+    window_size_x = pygame.display.get_surface().get_width()
+    window_size_y = pygame.display.get_surface().get_height()
+    sight_dir_size_x = pictures['sight_dir'].get_rect().width * 1.5
+    sight_dir_size_y =  pictures['sight_dir'].get_rect().height
+    text_height = sight_dir_size_y * 0.5
+    for i in text:
+        rez = pictures['info_font'].render(i, False, pictures['info_font_color'])
+        text_height += rez.get_height()
+        info_top_side = window_size_y - text_height
+        game_screen.blit(rez, (sight_dir_size_x + 10, info_top_side))
+
 def draw_game_map(game_screen, game_map, pictures):
     '''
     Выводит на экран game_screen игровую карту game_map : GameMap от первого лица.
@@ -69,11 +99,13 @@ def draw_game_map(game_screen, game_map, pictures):
     for obj in objects:
         draw_object(game_screen, obj, pictures)
     draw_sight_dir(game_screen, game_map.sight_dir, pictures)
+    draw_player_data(game_screen, game_map.get_data_of_sighter(), pictures)
 
 def main(game_screen, pictures):
     '''
     Основной цикл работы программы.
     '''
+    timer = pygame.time.get_ticks()
     game_is_finished = False
     while not game_is_finished:
         draw_game_map(screen, game_map, pictures)
@@ -82,16 +114,19 @@ def main(game_screen, pictures):
             if event.type == pygame.QUIT:
                 game_is_finished = True
             pressed_keys = pygame.key.get_pressed()
-            if pressed_keys[pygame.K_a]:
-                game_map.sight_dir -= 1
-            if pressed_keys[pygame.K_d]:
-                game_map.sight_dir += 1
-            if pressed_keys[pygame.K_w]:
-                game_map.move_obj(1)
-            if pressed_keys[pygame.K_s]:
-                game_map.move_obj(-1)
+            if pygame.time.get_ticks() - timer >= 100:
+                if pressed_keys[pygame.K_a]:
+                    game_map.sight_dir -= 1
+                if pressed_keys[pygame.K_d]:
+                    game_map.sight_dir += 1
+                if pressed_keys[pygame.K_w]:
+                    game_map.move_obj(1)
+                if pressed_keys[pygame.K_s]:
+                    game_map.move_obj(-1)
+                timer = pygame.time.get_ticks()
             screen.fill((0, 0, 0))
             pygame.display.flip()
+
 if __name__ == "__main__":
     pygame.init()
     game_map = game_map.GameMap()
@@ -101,4 +136,6 @@ if __name__ == "__main__":
     pictures = dict()
     for pic in ['zombie', 'sight_dir']:
         pictures[pic] = pygame.image.load('./images/' + pic + '.png').convert_alpha()
+    pictures['info_font'] = pygame.font.SysFont('ubuntu', 14)
+    pictures['info_font_color'] = (255, 255, 255)
     main(game_map, pictures)

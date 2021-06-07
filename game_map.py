@@ -82,9 +82,9 @@ class GameMap:
              / self.objects[self.sight].sight_len)
             all_len_of_sight = math.pi * self.objects[self.sight].sight_len / 2
             polar_angle = (math.atan2(obj[1].coords[0], obj[1].coords[1]) + math.pi / 2) * 180 / math.pi
-            #print('pa = ', polar_angle)
-            #print('ls = ', left_side_of_vision)
-            #print('rs = ', right_side_of_vision)
+            print('pa = ', polar_angle)
+            print('ls = ', left_side_of_vision)
+            print('rs = ', right_side_of_vision)
             if  not left_side_of_vision <= polar_angle <= right_side_of_vision:
                 continue
             elem['move'] = (polar_angle  - left_side_of_vision) / (right_side_of_vision - left_side_of_vision)
@@ -103,5 +103,22 @@ class GameMap:
         x = obj.coords[0]
         y = obj.coords[1]
         x = x + way * math.cos(sight_angle)
-        y = x + way * math.sin(sight_angle)
+        y = y + way * math.sin(sight_angle)
         self.objects[obj_index].coords = (x, y)
+
+    def get_data_of_sighter(self):
+        '''
+        Возвращает информацию о том объекте, который находится под
+        индексом sight.
+        В следующем формате: {
+            'name' : str -- название объекта, за который ведётся просмотр.
+            'hp' : int -- количество единиц жизни у него.
+            coords : (int, int) -- координата, где расположен объект.
+        }
+        '''
+        info = dict()
+        info['name'] = self.objects[self.sight].name
+        info['hp'] = self.objects[self.sight].hp
+        info['coords'] = (int(self.objects[self.sight].coords[0]), int(self.objects[self.sight].coords[1]))
+        info['angle'] = self.sight_dir
+        return info
