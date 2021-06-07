@@ -123,9 +123,11 @@ def main(game_screen, pictures):
                     game_map.move_obj(1)
                 if pressed_keys[pygame.K_s]:
                     game_map.move_obj(-1)
+                if pressed_keys[pygame.K_b]:
+                   game_map.sight_dir += 180
                 timer = pygame.time.get_ticks()
-            screen.fill((0, 0, 0))
-            pygame.display.flip()
+                screen.fill((0, 0, 0))
+                pygame.display.flip()
 
 if __name__ == "__main__":
     pygame.init()

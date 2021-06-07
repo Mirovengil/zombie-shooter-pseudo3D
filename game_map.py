@@ -24,7 +24,7 @@ def degree(value):
         value += 360
     if (value > 360):
         value %= 360
-    return value
+    return round(value, 5)
 
 class GameMap:
     '''
@@ -80,14 +80,22 @@ class GameMap:
             elem['name'] = obj[1].name
             elem['dist'] = 1 - (get_dist_between_points(self.objects[self.sight].coords, obj[1].coords)\
              / self.objects[self.sight].sight_len)
-            all_len_of_sight = math.pi * self.objects[self.sight].sight_len / 2
-            polar_angle = (math.atan2(obj[1].coords[0], obj[1].coords[1]) + math.pi / 2) * 180 / math.pi
-            print('pa = ', polar_angle)
-            print('ls = ', left_side_of_vision)
-            print('rs = ', right_side_of_vision)
-            if  not left_side_of_vision <= polar_angle <= right_side_of_vision:
+
+            obj_x = obj[1].coords[0]
+            obj_y = obj[1].coords[1]
+            sight_x = self.objects[self.sight].coords[0]
+            sight_y = self.objects[self.sight].coords[1]
+            obj_x -= sight_x
+            obj_y -= sight_y
+            polar_angle = math.atan2(obj_y, obj_x)
+            polar_angle = polar_angle * 180 / math.pi
+            if polar_angle < 0:
+                polar_angle = 360 + polar_angle
+            if not left_side_of_vision <= polar_angle <= right_side_of_vision or\
+            left_side_of_vision >= polar_angle >= right_side_of_vision:
                 continue
-            elem['move'] = (polar_angle  - left_side_of_vision) / (right_side_of_vision - left_side_of_vision)
+            elem['move'] = (polar_angle - left_side_of_vision) / (right_side_of_vision - left_side_of_vision)
+
             objects_in_sight.append(elem)
         return objects_in_sight
 
@@ -102,8 +110,8 @@ class GameMap:
         obj = self.objects[obj_index]
         x = obj.coords[0]
         y = obj.coords[1]
-        x = x + way * math.cos(sight_angle)
-        y = y + way * math.sin(sight_angle)
+        x = x + round(way * math.cos(sight_angle), 5)
+        y = y + round(way * math.sin(sight_angle), 5)
         self.objects[obj_index].coords = (x, y)
 
     def get_data_of_sighter(self):
