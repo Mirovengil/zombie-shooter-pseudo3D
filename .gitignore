@@ -178,5 +178,5 @@ Thumbs.db
 pyvenv.cfg
 .venv
 pip-selfcheck.json
-
+#Обожаю гитигнор.
 # End of https://www.toptal.com/developers/gitignore/api/linux,python,venv

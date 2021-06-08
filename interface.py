@@ -116,9 +116,9 @@ def main(game_screen, pictures):
             pressed_keys = pygame.key.get_pressed()
             if pygame.time.get_ticks() - timer >= 100:
                 if pressed_keys[pygame.K_a]:
-                    game_map.sight_dir -= 1
-                if pressed_keys[pygame.K_d]:
                     game_map.sight_dir += 1
+                if pressed_keys[pygame.K_d]:
+                    game_map.sight_dir -= 1
                 if pressed_keys[pygame.K_w]:
                     game_map.move_obj(1)
                 if pressed_keys[pygame.K_s]:
@@ -136,6 +136,7 @@ if __name__ == "__main__":
     game_map.add_object('zombie', (0, 7))
     game_map.add_object('zombie', (0, -7))
     game_map.add_object('tree', (3, 5))
+    game_map.add_object('tree', (-4, -2))
     screen = pygame.display.set_mode((STD_SIZE_Y, STD_SIZE_X))
     pictures = dict()
     for pic in ['zombie', 'sight_dir', 'tree']:
