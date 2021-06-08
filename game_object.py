@@ -8,11 +8,19 @@ FEATURES = {
         'is_visible' : True,
         'hp' : 15,
         'sight_len' : 10,
+        'resizable' : True
     },
     "tree" : {
         'is_visible' : True,
         'hp' : 15,
         'sight_len' : None,
+        "resizable" : True,
+    },
+    'sun' : {
+        'is_visible' : True,
+        'hp' : 1,
+        'sight_len': None,
+        'resizable' : False,
     },
 }
 
@@ -37,3 +45,4 @@ class GameObject:
         self.is_visible = FEATURES[name]['is_visible']
         self.hp = FEATURES[name]['hp']
         self.sight_len = FEATURES[name]['sight_len']
+        self.resizable = FEATURES[name]['resizable']

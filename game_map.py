@@ -61,6 +61,8 @@ class GameMap:
                 "dist" : float -- расстояние от объекта под индексом sight до данного (в процентах).
                 "move" : float -- смещение объекта от левого края поля зрения (в процентах).
                 Подробнее см. ./docs/sight.png.  
+                'prior' : float -- приоритет вывода (сначала отрисовываются картинки с наименьшим
+                приоритетом).
             }
         ]
         '''
@@ -74,12 +76,16 @@ class GameMap:
             if not obj[1].is_visible:
                 continue
             if get_dist_between_points(self.objects[self.sight].coords, obj[1].coords)\
-            > self.objects[self.sight].sight_len:
+            > self.objects[self.sight].sight_len and obj[1].resizable:
                 continue
             elem = dict()
+            elem['prior'] = get_dist_between_points(self.objects[self.sight].coords, obj[1].coords)
             elem['name'] = obj[1].name
-            elem['dist'] = 1 - (get_dist_between_points(self.objects[self.sight].coords, obj[1].coords)\
-             / self.objects[self.sight].sight_len)
+            if obj[1].resizable:
+                elem['dist'] = 1 - (get_dist_between_points(self.objects[self.sight].coords, obj[1].coords)\
+                / self.objects[self.sight].sight_len)
+            else:
+                elem['dist'] = 1
             obj_x = obj[1].coords[0]
             obj_y = obj[1].coords[1]
             sight_x = self.objects[self.sight].coords[0]
