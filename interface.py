@@ -46,6 +46,11 @@ def draw_object(game_screen, obj, pictures):
     window_size_x = pygame.display.get_surface().get_width()
     window_size_y = pygame.display.get_surface().get_height()
 
+    if obj['dist'] < 0.4:
+        object_name = object_name + "_very_long"
+    elif obj['dist'] < 0.7:
+        object_name = object_name + "_long"
+
     object_size_x = window_size_x * obj['dist']
     object_size_y = window_size_y * obj['dist']
     place_y = (window_size_y - object_size_y) // 2
@@ -139,7 +144,7 @@ if __name__ == "__main__":
     game_map.add_object('tree', (-4, -2))
     screen = pygame.display.set_mode((STD_SIZE_Y, STD_SIZE_X))
     pictures = dict()
-    for pic in ['zombie', 'sight_dir', 'tree']:
+    for pic in ['zombie', 'sight_dir', 'tree', 'zombie_long', 'zombie_very_long', 'tree_long', 'tree_very_long']:
         pictures[pic] = pygame.image.load('./images/' + pic + '.png').convert_alpha()
     pictures['info_font'] = pygame.font.SysFont('ubuntu', 14)
     pictures['info_font_color'] = (255, 255, 255)
