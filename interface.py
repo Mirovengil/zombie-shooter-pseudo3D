@@ -13,6 +13,20 @@ STD_SIZE_X = 480
 
 INF = 10 ** 10
 
+IMAGES = [
+    'zombie',
+    'sight_dir',
+    'tree',
+    'zombie_long', 
+    'zombie_very_long', 
+    'tree_long', 
+    'tree_very_long', 
+    'sun',
+    'wall',
+    'wall_long',
+    'wall_very_long',
+]
+
 def draw_sight_dir(screen, degrees, pictures):
     '''
     Отрисовывает направление взгляда игрока в левом нижнем углу (для удобства
@@ -89,7 +103,7 @@ def draw_player_data(game_screen, data, pictures):
         info_top_side = window_size_y - text_height
         game_screen.blit(rez, (sight_dir_size_x + 10, info_top_side))
 
-def draw_line_of_horisont(screen, pictures):
+def draw_biom(screen, pictures, biom):
     '''
     Отрисовывает небольшую "линию горизонта": делает небо синим, землю -- зелёной.
     Возможно, в будущем будут добавлены биомы, но пока что -- так-с.
@@ -97,8 +111,8 @@ def draw_line_of_horisont(screen, pictures):
     '''
     window_size_x = pygame.display.get_surface().get_width()
     window_size_y = pygame.display.get_surface().get_height()
-    pygame.draw.rect(screen, pictures['sky_color'], (0, 0, window_size_x, window_size_y // 2))
-    pygame.draw.rect(screen, pictures['dirt_color'], (0, window_size_y // 2, window_size_x, window_size_y))
+    pygame.draw.rect(screen, pictures[biom['type'] +'_sky_color'], (0, 0, window_size_x, window_size_y // 2))
+    pygame.draw.rect(screen, pictures[biom['type'] + '_soil_color'], (0, window_size_y // 2, window_size_x, window_size_y))
 
 def draw_game_map(game_screen, game_map, pictures):
     '''
@@ -106,7 +120,7 @@ def draw_game_map(game_screen, game_map, pictures):
     '''
     objects = game_map.get_sight()
     objects.sort(key=lambda a: a['prior'], reverse=True)
-    draw_line_of_horisont(game_screen, pictures)
+    draw_biom(game_screen, pictures, game_map.get_biom_info())
     #print(objects)
     #input()
     for obj in objects:
@@ -116,7 +130,7 @@ def draw_game_map(game_screen, game_map, pictures):
 
 def main(game_screen, pictures):
     '''
-    Основной цикл работы программы.
+    Основной цикл работы программы. 
     '''
     timer = pygame.time.get_ticks()
     game_is_finished = False
@@ -151,13 +165,17 @@ if __name__ == "__main__":
     game_map.add_object('tree', (3, 5))
     game_map.add_object('tree', (-4, -2))
     game_map.add_object('sun', (INF, 2 * INF))
+    #game_map.add_biom((0, 0), 5, 'desert')
     screen = pygame.display.set_mode((STD_SIZE_Y, STD_SIZE_X))
     pictures = dict()
-    for pic in ['zombie', 'sight_dir', 'tree', 'zombie_long', 'zombie_very_long', 'tree_long', 'tree_very_long', 'sun']:
+    for pic in IMAGES:
         pictures[pic] = pygame.image.load('./images/' + pic + '.png').convert_alpha()
     pictures['info_font'] = pygame.font.SysFont('ubuntu', 14)
     pictures['info_font_color'] = (255, 255, 255)
-    pictures['dirt_color'] = (65, 174, 60)
-    pictures['sky_color'] = (39, 154, 214)
+    pictures['wood_soil_color'] = (65, 174, 60)
+    pictures['wood_sky_color'] = (39, 154, 214)
+    pictures['desert_soil_color'] = (228, 206, 60)
+    pictures['desert_sky_color'] = (39, 154, 214)
     pictures['back_color'] = (10, 10, 10)
+    game_map.add_wall((-10, 8), (10, 9))
     main(game_map, pictures)

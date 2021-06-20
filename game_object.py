@@ -16,6 +16,12 @@ FEATURES = {
         'sight_len' : None,
         "resizable" : True,
     },
+    "wall" : {
+        'is_visible' : True,
+        'hp' : 1000,
+        'sight_len' : None,
+        "resizable" : True,
+    },
     'sun' : {
         'is_visible' : True,
         'hp' : 1,
