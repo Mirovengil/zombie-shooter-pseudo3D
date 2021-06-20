@@ -25,6 +25,7 @@ IMAGES = [
     'wall',
     'wall_long',
     'wall_very_long',
+    'scope'
 ]
 
 def draw_sight_dir(screen, degrees, pictures):
@@ -86,6 +87,7 @@ def draw_player_data(game_screen, data, pictures):
             'hp' : int -- количество единиц жизни у него.
             coords : (float, float) -- координата, где расположен объект.
         }
+    Кроме того, рисует на игровом экране направление взгляда игрока (т. н. "прицел").
     '''
     text = []
     text.append('object: ' + data['name'])
@@ -102,6 +104,9 @@ def draw_player_data(game_screen, data, pictures):
         text_height += rez.get_height()
         info_top_side = window_size_y - text_height
         game_screen.blit(rez, (sight_dir_size_x + 10, info_top_side))
+    scope_size_x = pictures['scope'].get_rect().width
+    scope_size_y =  pictures['scope'].get_rect().height
+    game_screen.blit(pictures['scope'], (window_size_x // 2 - scope_size_x // 2, window_size_y // 2 - scope_size_y // 2))
 
 def draw_biom(screen, pictures, biom):
     '''
